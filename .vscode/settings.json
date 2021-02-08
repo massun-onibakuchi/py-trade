@@ -1,0 +1,37 @@
+{
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    // ファイルの終了時に行末のスペース削除
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "python.linting.lintOnSave": true,
+    //Tabをスペースキーとして変換
+    "[python]": {
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": true,
+        "editor.tabSize": 4
+    },
+    "python.pythonPath": "${workspaceFolder}/bin/python",
+    // "python.venvPath": ".venv",
+    "python.linting.pylintEnabled": true,
+    // "python.linting.mypyEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Args": [
+        "--ignore=F841,W504",
+        "--max-line-length=120",
+        "--max-complexity",
+        "20"
+    ],
+    "python.formatting.provider": "autopep8",
+    "python.formatting.autopep8Args": [
+        "--aggressive",
+        "--aggressive",
+    ],
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        ".",
+        "-p",
+        "*test.py"
+    ],
+}
