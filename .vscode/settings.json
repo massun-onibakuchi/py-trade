@@ -11,7 +11,9 @@
         "editor.detectIndentation": true,
         "editor.tabSize": 4
     },
-    "python.pythonPath": "${workspaceFolder}/bin/python",
+    "python.pythonPath": "${workspaceRoot}/.venv/bin/python",
+    "python.venvPath": ".venv",
+
     // "python.venvPath": ".venv",
     "python.linting.pylintEnabled": true,
     // "python.linting.mypyEnabled": false,
