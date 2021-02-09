@@ -11,9 +11,8 @@
         "editor.detectIndentation": true,
         "editor.tabSize": 4
     },
-    "python.pythonPath": "${workspaceRoot}/.venv/bin/python",
+    "python.pythonPath": ".venv/bin/python",
     "python.venvPath": ".venv",
-
     // "python.venvPath": ".venv",
     "python.linting.pylintEnabled": true,
     // "python.linting.mypyEnabled": false,
@@ -36,4 +35,13 @@
         "-p",
         "*test.py"
     ],
+    "files.exclude": {
+        "**/*.pyc": true,
+        ".nyc_output": true,
+        "obj": true,
+        "bin": true,
+        "lib":true,
+        "**/__pycache__": true,
+        "**/.mypy_cache/**": true,
+    },
 }

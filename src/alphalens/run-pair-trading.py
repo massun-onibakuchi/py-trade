@@ -1,4 +1,10 @@
 import numpy as np
+# from rqalpha.api import *
+from rqalpha.apis.api_base import get_position, history_bars, subscribe
+from rqalpha.utils import logger
+from rqalpha.apis.api_abstract import buy_close, buy_open, sell_close, sell_open
+from rqalpha.const import POSITION_DIRECTION
+from rqalpha import run_func
 
 # 在这个方法中编写任何的初始化逻辑。context对象将会在你的算法策略的任何方法之间做传递。
 
@@ -132,3 +138,37 @@ def handle_bar(context, bar_dict):
             if qty_a == 0 and qty_b == 0:
                 context.up_cross_up_limit = False
                 logger.info('卖出价差仓位平仓成功!')
+
+
+config = {
+    "base": {
+        "start_date": "2016-06-01",
+        "end_date": "2016-12-01",
+        "benchmark": "000300.XSHG",
+        "accounts": {
+            "future": 100000
+        }
+    },
+    "extra": {
+        "log_level": "error",
+    },
+    "mod": {
+        "sys_analyser": {
+            "enabled": True,
+            "plot": True,
+            # "record": True,
+            # "output_file": "./data/result.pkl",
+            # "report_save_path": "./data/result",
+        },
+        # "sys_accounts": {
+        #     "validate_future_position": True,
+        # }
+    }
+}
+
+# 您可以指定您要传递的参数
+run_func(
+    init=init,
+    before_trading=before_trading,
+    handle_bar=handle_bar,
+    config=config)
