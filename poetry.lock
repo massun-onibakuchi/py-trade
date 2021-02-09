@@ -1,0 +1,17 @@
+[[package]]
+name = "talib"
+version = "0.1.1"
+description = "A package to prevent exploit"
+category = "main"
+optional = false
+python-versions = "*"
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.7"
+content-hash = "2682e74b9eb39f8ae9fd206d43742d7f7fac07557b70df2e4e5d6b2767eb0ed4"
+
+[metadata.files]
+talib = [
+    {file = "talib-0.1.1.tar.gz", hash = "sha256:68488af98366d64ccf1fca0049dc805f19e666fc8c1d765529e17b8d1674f087"},
+]
