@@ -1,17 +1,20 @@
 [[package]]
-name = "talib"
-version = "0.1.1"
-description = "A package to prevent exploit"
+name = "backtrader"
+version = "1.9.76.123"
+description = "BackTesting Engine"
 category = "main"
 optional = false
 python-versions = "*"
 
+[package.extras]
+plotting = ["matplotlib"]
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "2682e74b9eb39f8ae9fd206d43742d7f7fac07557b70df2e4e5d6b2767eb0ed4"
+content-hash = "459f52e84c9bb15d99890530bbbe6c55cfe4e9f6d5fdc8dea0ddb19a6e3f7053"
 
 [metadata.files]
-talib = [
-    {file = "talib-0.1.1.tar.gz", hash = "sha256:68488af98366d64ccf1fca0049dc805f19e666fc8c1d765529e17b8d1674f087"},
+backtrader = [
+    {file = "backtrader-1.9.76.123-py2.py3-none-any.whl", hash = "sha256:0dc8912a98352b75122f8d7084bc63ee47f61c2a1d16f506d4d82aee3941297a"},
 ]
