@@ -2,6 +2,7 @@ import requests
 import os
 import json
 from os.path import join, dirname
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 
 load_dotenv(verbose=True)
@@ -10,7 +11,10 @@ dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
 # GET /2/tweets/search/recent
-
+now = datetime.now(timezone.utc)
+print(now.minute)
+print("now.min - 2",now.minute - 2)
+now.replace(minute=now.minute)
 
 def auth():
     return os.environ.get("TWITTER_BEARER_TOKEN")
@@ -27,10 +31,9 @@ def create_url():
     # possibly_sensitive, promoted_metrics, public_metrics, referenced_tweets,
     # source, text, and withheld
     tweet_fields = "tweet.fields=author_id"
-    start_time_fields = ""  # start_time
-    url = "https://api.twitter.com/2/tweets/search/recent?query={}&{}".format(
-        query, tweet_fields
-    )
+    start_time_fields = "start_time=" + datetime.now(timezone.utc).isoformat()
+    url = "https://api.twitter.com/2/tweets/search/recent?query={}&{}&{}".format(
+        query, tweet_fields, start_time_fields)
     return url
 
 
@@ -47,12 +50,18 @@ def connect_to_endpoint(url, headers):
     return response.json()
 
 
-def check_txt(keyword, txt):
-    pass
+def check_txt(keywords, txt):
+    is_included = False
+    for word in keywords:
+        is_included = (word in txt) and is_included
+    return is_included
+
 
 def mining_txt(keywords, datas):
+    is_included = False
     for data in datas:
-        check_txt(keywords, data["txt"])
+        is_included = check_txt(keywords, data["txt"]) or is_included
+    return is_included
 
 
 def main():
@@ -64,8 +73,8 @@ def main():
     print("Result: \n", res)
     json_dict = json.loads(res)
 
-    keywords = ['doge','']
-    mining_txt(keywords,json_dict)
+    keywords = ['doge']
+    # mining_txt(keywords, json_dict)
 
 
 if __name__ == "__main__":
