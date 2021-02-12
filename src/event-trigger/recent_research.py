@@ -6,22 +6,23 @@ from datetime import datetime, timezone
 from dotenv import load_dotenv
 
 load_dotenv(verbose=True)
-
-dotenv_path = join(dirname(__file__), '.env')
+ENV_FILE = '.production.env' if os.environ.get(
+    "PYTHON_ENV") == 'production' else '.development.env'
+# dotenv_path = join(dirname(__file__), ENV_FILE)
+# dotenv_path = '.development.env'
 load_dotenv(dotenv_path)
 
-# GET /2/tweets/search/recent
-now = datetime.now(timezone.utc)
-print(now.minute)
-print("now.min - 2",now.minute - 2)
-now.replace(minute=now.minute)
+print(dotenv_path)
+print(os.getcwd())
+print(dirname(__file__))
+print(os.environ.get("TWITTER_BEARER_TOKEN"))
 
 def auth():
     return os.environ.get("TWITTER_BEARER_TOKEN")
 
 
 def create_url():
-    query = "from:elonmusk -is:retweet"
+    # GET /2/tweets/search/recent
     # query = "from:elonmusk -is:retweet keyword:doge"
     # Tweet fields are adjustable.
     # Options include:
@@ -30,8 +31,13 @@ def create_url():
     # in_reply_to_user_id, lang, non_public_metrics, organic_metrics,
     # possibly_sensitive, promoted_metrics, public_metrics, referenced_tweets,
     # source, text, and withheld
+    query = "from:elonmusk -is:retweet"
     tweet_fields = "tweet.fields=author_id"
-    start_time_fields = "start_time=" + datetime.now(timezone.utc).isoformat()
+    utc_date = datetime.now(timezone.utc)
+    utc_date = utc_date.replace(second=(utc_date.second - 10) % 60)
+    utc_date = utc_date.replace(day=(utc_date.day - 3) % 60)
+    start_time_fields = "start_time=" + utc_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+
     url = "https://api.twitter.com/2/tweets/search/recent?query={}&{}&{}".format(
         query, tweet_fields, start_time_fields)
     return url
@@ -59,8 +65,10 @@ def check_txt(keywords, txt):
 
 def mining_txt(keywords, datas):
     is_included = False
-    for data in datas:
-        is_included = check_txt(keywords, data["txt"]) or is_included
+    if datas["meta"]["result_count"] == 0:
+        return is_included
+    for data in datas["data"]:
+        is_included = check_txt(keywords, data["text"]) or is_included
     return is_included
 
 
@@ -72,9 +80,8 @@ def main():
     res = json.dumps(json_response, indent=4, sort_keys=True)
     print("Result: \n", res)
     json_dict = json.loads(res)
-
     keywords = ['doge']
-    # mining_txt(keywords, json_dict)
+    mining_txt(keywords, json_dict)
 
 
 if __name__ == "__main__":
