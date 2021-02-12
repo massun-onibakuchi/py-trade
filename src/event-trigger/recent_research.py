@@ -1,21 +1,17 @@
 import requests
 import os
 import json
-from os.path import join, dirname
+from os.path import join
 from datetime import datetime, timezone
+import pprint
 from dotenv import load_dotenv
 
 load_dotenv(verbose=True)
 ENV_FILE = '.production.env' if os.environ.get(
     "PYTHON_ENV") == 'production' else '.development.env'
-# dotenv_path = join(dirname(__file__), ENV_FILE)
-# dotenv_path = '.development.env'
+dotenv_path = join(os.getcwd(), ENV_FILE)
 load_dotenv(dotenv_path)
 
-print(dotenv_path)
-print(os.getcwd())
-print(dirname(__file__))
-print(os.environ.get("TWITTER_BEARER_TOKEN"))
 
 def auth():
     return os.environ.get("TWITTER_BEARER_TOKEN")
@@ -59,17 +55,18 @@ def connect_to_endpoint(url, headers):
 def check_txt(keywords, txt):
     is_included = False
     for word in keywords:
-        is_included = (word in txt) and is_included
+        is_included = (word in txt) or is_included
     return is_included
 
 
 def mining_txt(keywords, datas):
-    is_included = False
+    matched_data = []
     if datas["meta"]["result_count"] == 0:
-        return is_included
+        return []
     for data in datas["data"]:
-        is_included = check_txt(keywords, data["text"]) or is_included
-    return is_included
+        if check_txt(keywords, data["text"]):
+            matched_data.append(data)
+    return matched_data
 
 
 def main():
@@ -78,10 +75,12 @@ def main():
     headers = create_headers(bearer_token)
     json_response = connect_to_endpoint(url, headers)
     res = json.dumps(json_response, indent=4, sort_keys=True)
-    print("Result: \n", res)
+    print("Feched Tweets: \n", res)
     json_dict = json.loads(res)
-    keywords = ['doge']
-    mining_txt(keywords, json_dict)
+    keywords = ['doge', 'Doge', 'DOGE']
+    matched = mining_txt(keywords, json_dict)
+    print("Result: \n", res)
+    pprint.pprint(matched)
 
 
 if __name__ == "__main__":
