@@ -2,4 +2,4 @@ lib
 bin
 .venv
 **.csv
-.env
+**.env
