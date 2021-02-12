@@ -13,7 +13,7 @@ dotenv_path = join(os.getcwd(), ENV_FILE)
 # dotenv_path = '.development.env'
 load_dotenv(dotenv_path)
 print('---------')
-print( os.getcwd())
+print(os.getcwd())
 print(dirname(__file__))
 
 print('---------')
@@ -24,3 +24,12 @@ print(os.environ.get("TWITTER_BEARER_TOKEN"))
 
 print('---------')
 print('---------')
+
+queries = []
+query_strings = ''
+if queries is not []:
+    query_strings = ("?" + "".join([q + "&" for q in queries]))[:-1]
+url = "https://api.twitter.com/2/tweets/search/recent{}".format(
+    query_strings)
+
+print(url)

@@ -3,7 +3,6 @@ import os
 import json
 from os.path import join
 from datetime import datetime, timezone
-import pprint
 from dotenv import load_dotenv
 
 load_dotenv(verbose=True)
@@ -17,25 +16,15 @@ def auth():
     return os.environ.get("TWITTER_BEARER_TOKEN")
 
 
-def create_url():
+def create_url(queries=[]):
     # GET /2/tweets/search/recent
-    # query = "from:elonmusk -is:retweet keyword:doge"
-    # Tweet fields are adjustable.
-    # Options include:
-    # attachments, author_id, context_annotations,
-    # conversation_id, created_at, entities, geo, id,
-    # in_reply_to_user_id, lang, non_public_metrics, organic_metrics,
-    # possibly_sensitive, promoted_metrics, public_metrics, referenced_tweets,
-    # source, text, and withheld
-    query = "from:elonmusk -is:retweet"
-    tweet_fields = "tweet.fields=author_id"
-    utc_date = datetime.now(timezone.utc)
-    utc_date = utc_date.replace(second=(utc_date.second - 10) % 60)
-    utc_date = utc_date.replace(day=(utc_date.day - 3) % 60)
-    start_time_fields = "start_time=" + utc_date.strftime("%Y-%m-%dT%H:%M:%SZ")
-
-    url = "https://api.twitter.com/2/tweets/search/recent?query={}&{}&{}".format(
-        query, tweet_fields, start_time_fields)
+    # url = "https://api.twitter.com/2/tweets/search/recent?query={}&{}&{}".format(
+    #     query, tweet_fields, start_time_fields)
+    query_strings = ''
+    if queries is not []:
+        query_strings = ("?" + "".join([q + "&" for q in queries]))[:-1]
+    url = "https://api.twitter.com/2/tweets/search/recent{}".format(
+        query_strings)
     return url
 
 
@@ -70,17 +59,24 @@ def mining_txt(keywords, datas):
 
 
 def main():
+    keywords = ['doge', 'Doge', 'DOGE']
+    query = "query=from:elonmusk -is:retweet"
+    tweet_fields = "tweet.fields=author_id"
+    utc_date = datetime.now(timezone.utc)
+    utc_date = utc_date.replace(second=(utc_date.second - 10) % 60)
+    utc_date = utc_date.replace(day=(utc_date.day - 3) % 60)
+    start_time_fields = "start_time=" + utc_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+    queries = [query, tweet_fields, start_time_fields]
+
     bearer_token = auth()
-    url = create_url()
+    url = create_url(queries)
     headers = create_headers(bearer_token)
     json_response = connect_to_endpoint(url, headers)
-    res = json.dumps(json_response, indent=4, sort_keys=True)
-    print("Feched Tweets: \n", res)
-    json_dict = json.loads(res)
-    keywords = ['doge', 'Doge', 'DOGE']
-    matched = mining_txt(keywords, json_dict)
-    print("Result: \n", res)
-    pprint.pprint(matched)
+    res = json.dumps(json_response, indent=2, sort_keys=True)
+    print("Feched Tweets: ", res)
+
+    matched = mining_txt(keywords, json_response)
+    print("Matched Tweets:", json.dumps(matched, indent=2))
 
 
 if __name__ == "__main__":
