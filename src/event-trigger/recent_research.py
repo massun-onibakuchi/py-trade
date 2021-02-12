@@ -58,16 +58,7 @@ def mining_txt(keywords, datas):
     return matched_data
 
 
-def main():
-    keywords = ['doge', 'Doge', 'DOGE']
-    query = "query=from:elonmusk -is:retweet"
-    tweet_fields = "tweet.fields=author_id"
-    utc_date = datetime.now(timezone.utc)
-    utc_date = utc_date.replace(second=(utc_date.second - 10) % 60)
-    utc_date = utc_date.replace(day=(utc_date.day - 3) % 60)
-    start_time_fields = "start_time=" + utc_date.strftime("%Y-%m-%dT%H:%M:%SZ")
-    queries = [query, tweet_fields, start_time_fields]
-
+def recent_research(keywords, queries):
     bearer_token = auth()
     url = create_url(queries)
     headers = create_headers(bearer_token)
@@ -77,7 +68,17 @@ def main():
 
     matched = mining_txt(keywords, json_response)
     print("Matched Tweets:", json.dumps(matched, indent=2))
+    return matched
 
 
 if __name__ == "__main__":
-    main()
+    query = "query=from:elonmusk -is:retweet"
+    tweet_fields = "tweet.fields=author_id"
+    utc_date = datetime.now(timezone.utc)
+    utc_date = utc_date.replace(second=(utc_date.second - 10) % 60)
+    utc_date = utc_date.replace(day=(utc_date.day - 3) % 60)
+    start_time_fields = "start_time=" + utc_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    keywords = ['doge', 'Doge', 'DOGE']
+    queries = [query, tweet_fields, start_time_fields]
+    recent_research(keywords, queries)
