@@ -2,7 +2,8 @@ import asyncio
 from datetime import datetime, timezone
 from ftx.ftx import FTX
 from twitter_search.recent_research import recent_research
-from setting.settting import FTX_API_KEY, FTX_API_SECRET, PYTHON_ENV, MARKET, SUBACCOUNT
+from setting.settting import FTX_API_KEY, FTX_API_SECRET, PYTHON_ENV, MARKET, SUBACCOUNT, MAX_SIZE
+import json
 
 
 class Bot:
@@ -51,13 +52,20 @@ class Bot:
         response = await self.ftx.send()
         print(response[0])
         """
-        self.ftx.account()
-        response = await self.ftx.send()
-        print(response[0])
 
         self.ftx.positions()
         response = await self.ftx.send()
-        print(response[0])
+        # print(json.dumps(response[0], indent=2, sort_keys=False))
+        position = ''
+        for pos in response[0]["result"]:
+            if pos["future"] == MARKET:
+                position = pos
+        print("position :>>", position)
+
+        await asyncio.sleep(5)
+
+        if position["size"] > float(MAX_SIZE):
+            return
 
         query = "query=from:elonmusk -is:retweet"
         tweet_fields = "tweet.fields=author_id"
@@ -77,7 +85,6 @@ class Bot:
         #     print(response[0])
         #     orderId = response[0]['result']['id']
 
-        await asyncio.sleep(5)
         await asyncio.sleep(interval)
 
 

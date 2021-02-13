@@ -64,7 +64,7 @@ def recent_research(keywords, queries):
     headers = create_headers(bearer_token)
     json_response = connect_to_endpoint(url, headers)
     res = json.dumps(json_response, indent=2, sort_keys=True)
-    print("Feched Tweets: ", res)
+    # print("Feched Tweets: ", res)
 
     matched = mining_txt(keywords, json_response)
     print("Matched Tweets:", json.dumps(matched, indent=2))
