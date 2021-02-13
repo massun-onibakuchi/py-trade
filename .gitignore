@@ -5,3 +5,4 @@ bin
 **.env
 
 **/__pycache__
+src/read-orderbook-py
