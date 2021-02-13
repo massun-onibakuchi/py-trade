@@ -74,16 +74,24 @@ class Bot:
         keywords = ['doge', 'Doge', 'DOGE']
         result = recent_research(keywords, queries)
 
-        # if len(result) > 0:
-        #     self.ftx.place_order(
-        #         type='limit',
-        #         side='buy',
-        #         price=1111,
-        #         size=0.001,
-        #         postOnly=True)
-        #     response = await self.ftx.send()
-        #     print(response[0])
-        #     orderId = response[0]['result']['id']
+        if len(result) > 0:
+            if PYTHON_ENV == 'production':
+                self.ftx.place_order(
+                    type='market',
+                    side='buy',
+                    price='',
+                    size=180,
+                    postOnly=False)
+            else:
+                self.ftx.place_order(
+                    type='limit',
+                    side='buy',
+                    price=1111,
+                    size=0.001,
+                    postOnly=True)
+            response = await self.ftx.send()
+            print(response[0])
+            orderId = response[0]['result']['id']
 
         await asyncio.sleep(interval)
 
