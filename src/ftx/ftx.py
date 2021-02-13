@@ -35,11 +35,11 @@ class FTX:
     # ------------------------------------------------ #
     # init
     # ------------------------------------------------ #
-    def __init__(self, api_key, api_secret):
+    def __init__(self, market, api_key, api_secret):
         # APIキー・SECRETをセット
         self.api_key = api_key
         self.api_secret = api_secret
-
+        self.MARKET = market
     # ------------------------------------------------ #
     # async request for rest api
     # ------------------------------------------------ #

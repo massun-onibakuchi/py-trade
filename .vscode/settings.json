@@ -18,10 +18,9 @@
     // "python.linting.mypyEnabled": false,
     "python.linting.flake8Enabled": true,
     "python.linting.flake8Args": [
-        "--ignore=F841,W504",
         "--max-line-length=120",
-        "--max-complexity",
-        "20"
+        "--max-complexity=20",
+        "--ignore=F841,W504",
     ],
     "python.formatting.provider": "autopep8",
     "python.formatting.autopep8Args": [
