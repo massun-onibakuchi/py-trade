@@ -2,7 +2,7 @@ import asyncio
 from datetime import datetime, timezone
 from ftx.ftx import FTX
 from twitter_search.recent_research import recent_research
-from setting.settting import FTX_API_KEY, FTX_API_SECRET, PYTHON_ENV, MARKET
+from setting.settting import FTX_API_KEY, FTX_API_SECRET, PYTHON_ENV, MARKET, SUBACCOUNT
 
 
 class Bot:
@@ -10,8 +10,15 @@ class Bot:
     # init
     # ---------------------------------------- #
     def __init__(self, api_key, api_secret):
-        self.ftx = FTX(MARKET, api_key=api_key, api_secret=api_secret)
+        self.ftx = FTX(
+            MARKET,
+            api_key=api_key,
+            api_secret=api_secret,
+            subaccount=SUBACCOUNT)
 
+        print("ENV: ", PYTHON_ENV)
+        print("MARKET: ", MARKET)
+        print("SUBACCOUNT: ", SUBACCOUNT)
         # タスクの設定およびイベントループの開始
         loop = asyncio.get_event_loop()
         tasks = [self.run()]
@@ -45,6 +52,10 @@ class Bot:
         print(response[0])
         """
         self.ftx.account()
+        response = await self.ftx.send()
+        print(response[0])
+
+        self.ftx.positions()
         response = await self.ftx.send()
         print(response[0])
 

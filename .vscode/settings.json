@@ -40,6 +40,7 @@
         "obj": true,
         "bin": true,
         "lib":true,
+        ".venv":true,
         "**/__pycache__": true,
         "**/.mypy_cache/**": true,
     },

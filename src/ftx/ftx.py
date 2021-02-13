@@ -10,7 +10,6 @@ import hmac
 import hashlib
 from requests import Request
 
-
 class FTX:
 
     # 定数
@@ -27,6 +26,7 @@ class FTX:
     # 変数
     api_key = ""
     api_secret = ""
+    subaccount = None
 
     session = None  # セッション保持
     requests = []  # リクエストパラメータ
@@ -35,11 +35,12 @@ class FTX:
     # ------------------------------------------------ #
     # init
     # ------------------------------------------------ #
-    def __init__(self, market, api_key, api_secret):
+    def __init__(self, market, api_key, api_secret, subaccount=None):
         # APIキー・SECRETをセット
         self.api_key = api_key
         self.api_secret = api_secret
         self.MARKET = market
+        self.subaccount = subaccount
     # ------------------------------------------------ #
     # async request for rest api
     # ------------------------------------------------ #
@@ -79,7 +80,8 @@ class FTX:
 
             timestamp = int(time.time() * 1000)
             if method == "GET":
-                signature_payload = self.get_payload(timestamp, method, url, params)
+                signature_payload = self.get_payload(
+                    timestamp, method, url, params)
                 signature = self.get_sign(signature_payload)
                 headers = self.set_headers_for_private(
                     timestamp=str(timestamp), sign=signature, params=params
@@ -97,7 +99,8 @@ class FTX:
             if method == "POST":
                 post_data = json.dumps(params)
 
-                signature_payload = self.get_payload(timestamp, method, url, params)
+                signature_payload = self.get_payload(
+                    timestamp, method, url, params)
                 signature = self.get_sign(signature_payload)
                 headers = self.set_headers_for_private(
                     timestamp=str(timestamp), sign=signature, params=params
@@ -115,7 +118,8 @@ class FTX:
             if method == "PUT":
                 post_data = json.dumps(params)
 
-                signature_payload = self.get_payload(timestamp, method, url, params)
+                signature_payload = self.get_payload(
+                    timestamp, method, url, params)
                 signature = self.get_sign(signature_payload)
                 headers = self.set_headers_for_private(
                     timestamp=str(timestamp), sign=signature, params=params
@@ -130,7 +134,8 @@ class FTX:
                 )
 
             if method == "DELETE":
-                signature_payload = self.get_payload(timestamp, method, url, params)
+                signature_payload = self.get_payload(
+                    timestamp, method, url, params)
                 signature = self.get_sign(signature_payload)
                 headers = self.set_headers_for_private(
                     timestamp=str(timestamp), sign=signature, params=params
@@ -148,8 +153,10 @@ class FTX:
         headers = {
             "FTX-KEY": self.api_key,
             "FTX-SIGN": sign,
-            "FTX-TS": timestamp,
+            "FTX-TS": timestamp
         }
+        if self.subaccount:
+            headers["FTX-SUBACCOUNT"] = self.subaccount
         if len(params) > 0:
             headers["Content-Type"] = "application/json"
         return headers
@@ -375,7 +382,8 @@ class FTX:
         )
 
     # Get index weights
-    # Note that this only applies to index futures, e.g. ALT/MID/SHIT/EXCH/DRAGON.
+    # Note that this only applies to index futures, e.g.
+    # ALT/MID/SHIT/EXCH/DRAGON.
     def index_weights(self, index_name):
         target_path = "".join(["/indexes/", index_name, "/weights"])
         params = {}
@@ -398,7 +406,12 @@ class FTX:
         )
 
     # Get historical index
-    def historical_index(self, resolution="", limit="", start_time="", end_time=""):
+    def historical_index(
+            self,
+            resolution="",
+            limit="",
+            start_time="",
+            end_time=""):
         target_path = "".join(["/indexes/", self.MARKET, "/candles"])
         params = {}
 
@@ -719,7 +732,10 @@ class FTX:
             if access_modifiers == "private":
                 params = {"op": "subscribe", "channel": channel}
             else:
-                params = {"op": "subscribe", "channel": channel, "market": self.MARKET}
+                params = {
+                    "op": "subscribe",
+                    "channel": channel,
+                    "market": self.MARKET}
 
             await asyncio.wait([client.send_str(json.dumps(params))])
             print("---- %s connect ----" % (channel))
