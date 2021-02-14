@@ -15,11 +15,11 @@ load_dotenv(dotenv_path)
 def auth():
     return os.environ.get("TWITTER_BEARER_TOKEN")
 
-
+# Rate limits https://developer.twitter.com/en/docs/rate-limits
+# 450 requests per 15 - minute window(app auth)
+# 180 requests per 15 - minute window(user auth)
 def create_url(queries=[]):
     # GET /2/tweets/search/recent
-    # url = "https://api.twitter.com/2/tweets/search/recent?query={}&{}&{}".format(
-    #     query, tweet_fields, start_time_fields)
     query_strings = ''
     if queries is not []:
         query_strings = ("?" + "".join([q + "&" for q in queries]))[:-1]

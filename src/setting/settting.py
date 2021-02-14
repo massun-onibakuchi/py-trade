@@ -17,8 +17,14 @@ load_dotenv(dotenv_path)
 TWITTER_API_KEY = os.environ.get("TWITTER_API_KEY")
 TWITTER_API_SECERT = os.environ.get("TWITTER_API_SECERT")
 TWITTER_BEARER_TOKEN = os.environ.get("TWITTER_BEARER_TOKEN")
+
 FTX_API_KEY = os.environ.get("FTX_API_KEY")
 FTX_API_SECRET = os.environ.get("FTX_API_SECRET")
+
 MARKET = os.environ.get("MARKET")
 SUBACCOUNT = os.environ.get("SUBACCOUNT")
 MAX_SIZE = os.environ.get("MAX_SIZE")
+
+LINE_USER_ID = os.environ.get("LINE_USER_ID")
+LINE_BEARER_TOKEN = os.environ.get("LINE_BEARER_TOKEN")
+

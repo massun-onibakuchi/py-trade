@@ -2,6 +2,7 @@ import asyncio
 from datetime import datetime, timezone
 from ftx.ftx import FTX
 from twitter_search.recent_research import recent_research
+from line import push_message
 from setting.settting import FTX_API_KEY, FTX_API_SECRET, PYTHON_ENV, MARKET, SUBACCOUNT, MAX_SIZE
 import json
 
@@ -17,9 +18,11 @@ class Bot:
             api_secret=api_secret,
             subaccount=SUBACCOUNT)
 
-        print("ENV: ", PYTHON_ENV)
-        print("MARKET: ", MARKET)
-        print("SUBACCOUNT: ", SUBACCOUNT)
+        print(
+            "ENV:%s \nMARKET %s \nSUBACCOUNT: %s"
+            % (PYTHON_ENV,
+                MARKET,
+                SUBACCOUNT))
         # タスクの設定およびイベントループの開始
         loop = asyncio.get_event_loop()
         tasks = [self.run()]
@@ -75,6 +78,7 @@ class Bot:
         result = recent_research(keywords, queries)
 
         if len(result) > 0:
+            push_message(f"Detect events:\nkeywords:{keywords}\n{result}")
             if PYTHON_ENV == 'production':
                 self.ftx.place_order(
                     type='market',
@@ -92,7 +96,7 @@ class Bot:
             response = await self.ftx.send()
             print(response[0])
             orderId = response[0]['result']['id']
-
+            push_message(f"Ordered :\norderId:{orderId}")
         await asyncio.sleep(interval)
 
 
