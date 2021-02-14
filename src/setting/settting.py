@@ -21,6 +21,7 @@ TWITTER_BEARER_TOKEN = os.environ.get("TWITTER_BEARER_TOKEN")
 FTX_API_KEY = os.environ.get("FTX_API_KEY")
 FTX_API_SECRET = os.environ.get("FTX_API_SECRET")
 
+BOT_NAME = os.environ.get("BOT_NAME")
 MARKET = os.environ.get("MARKET")
 SUBACCOUNT = os.environ.get("SUBACCOUNT")
 MAX_SIZE = os.environ.get("MAX_SIZE")

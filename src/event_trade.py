@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from ftx.ftx import FTX
 from twitter_search.recent_research import recent_research
 from line import push_message
-from setting.settting import FTX_API_KEY, FTX_API_SECRET, PYTHON_ENV, MARKET, SUBACCOUNT, MAX_SIZE
+from setting.settting import FTX_API_KEY, FTX_API_SECRET, PYTHON_ENV, MARKET, SUBACCOUNT, MAX_SIZE, BOT_NAME
 import json
 
 
@@ -19,8 +19,9 @@ class Bot:
             subaccount=SUBACCOUNT)
 
         print(
-            "ENV:%s \nMARKET %s \nSUBACCOUNT: %s"
-            % (PYTHON_ENV,
+            "BOT_NAME: %s \nENV:%s \nMARKET %s \nSUBACCOUNT: %s"
+            % (BOT_NAME,
+                PYTHON_ENV,
                 MARKET,
                 SUBACCOUNT))
         # タスクの設定およびイベントループの開始
@@ -59,7 +60,7 @@ class Bot:
         self.ftx.positions()
         response = await self.ftx.send()
         # print(json.dumps(response[0], indent=2, sort_keys=False))
-        position = ''
+        position = {}
         for pos in response[0]["result"]:
             if pos["future"] == MARKET:
                 position = pos
